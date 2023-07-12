@@ -10,18 +10,44 @@ export default class Rook extends Piece {
     getAvailableMoves(board) {
         let location = board.findPiece(this)
         let moves = []
-        for ( let i = 0; i <= 7; i++ ) {
-            if (i !== location.row) {
-                moves.push(Square.at(i, location.col));
-            }
-        }
-        for ( let i = 0; i <= 7; i++ ) {
-            if ( i !== location.col) {
-                moves.push(Square.at(location.row, i));
-            }
-        }
-       
+        let row = location.row
+        let col = location.col
 
-        return moves;
+
+        const directions = [
+          {row:1, col:0},
+          {row:0, col:1},
+          {row:-1, col:0},
+          {row:0, col:-1},
+        ]
+
+        for ( let direction of directions) {
+            for ( let i = 1; i < 8; i++) {
+                const testSquare = Square.at(row + direction.row * i, col + direction.col * i);
+
+                // Is square on the board
+
+                if ( testSquare.row > 7 || testSquare.row < 0 || testSquare.col > 7 || testSquare.col < 0) {
+                    break;
+                }
+
+                const piece = board.getPiece(testSquare);
+
+                if ( piece === undefined) {
+                    moves.push(testSquare);
+                    continue;
+                }
+
+                if ( piece.player !== this.player ) {
+                    moves.push(testSquare);
+                }
+                break;
+            }
+
+        
+        }
+
+
+        return moves ;
     }
 }
