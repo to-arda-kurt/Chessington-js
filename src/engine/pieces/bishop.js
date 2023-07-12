@@ -1,6 +1,6 @@
-import Player from '..player';
-import Square from '..square';
-import Piece from '.piece';
+import Player from '../player';
+import Square from '../square';
+import Piece from './piece';
 
 export default class Bishop extends Piece {
     constructor(player) {
@@ -11,54 +11,42 @@ export default class Bishop extends Piece {
         let location = board.findPiece(this);
         let moves = []
 
-        for( let i = 1; i=7; i++ ){
-            if(location.col + i  8 && location.row + i  8){
-                moves.push(Square.at(location.row+i,location.col+i))
+        let row = location.row
+        let col = location.col
+
+
+        const directions = [
+          {row:1, col:1},
+          {row:-1, col:1},
+          {row:1, col:-1},
+          {row:-1, col:-1},
+        ]
+
+        for ( let direction of directions) {
+            for ( let i = 1; i < 8; i++) {
+                const testSquare = Square.at(row + direction.row * i, col + direction.col * i);
+
+                // Is square on the board
+
+                if ( testSquare.row > 7 || testSquare.row < 0 || testSquare.col > 7 || testSquare.col < 0) {
+                    break;
+                }
+
+                const piece = board.getPiece(testSquare);
+
+                if ( piece === undefined) {
+                    moves.push(testSquare);
+                    continue;
+                }
+
+                if ( piece.player !== this.player ) {
+                    moves.push(testSquare);
+                }
+                break;
             }
 
-            if(location.col + i  8 && location.row - i = 0){
-                moves.push(Square.at(location.row-i,location.col+i))
-            }
-
-            if(location.col - i = 0 && location.row - i = 0){
-                moves.push(Square.at(location.row-i,location.col-i))
-            }
-
-            if(location.col - i = 0 && location.row + i  8){
-                moves.push(Square.at(location.row+i,location.col-i))
-            }
+        
         }
-
-
-
-
-        //   3,3 ++
-        //  for (let i = 1; i = 7; i++) {
-
-        //      moves.push(Square.at(location.row + i, location.col + i));
-
-        //  }
-
-        //   -+
-        //  for (let i = 1; i = 7; i++) {
-
-        //      moves.push(Square.at(location.row + i, location.col - i));
-
-        //  }
-
-        //   --
-        //  for (let i = 1; i = 7; i++) {
-
-        //      moves.push(Square.at(location.row - i, location.col - i));
-
-        //  }
-
-        //   +-
-        //  for (let i = 1; i = 7; i++) {
-
-        //      moves.push(Square.at(location.row - i, location.col + i));
-
-        //  }
 
 
         return moves ;
